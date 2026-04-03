@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Stores user profile and balance information.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique ID of the user." },
+        "displayName": { "type": "string", "description": "The display name of the user." },
+        "email": { "type": "string", "format": "email", "description": "The email address of the user." },
+        "photoURL": { "type": "string", "format": "uri", "description": "The profile photo URL of the user." },
+        "balance": { "type": "number", "description": "The current balance of the user in INR." },
+        "referralCode": { "type": "string", "description": "The unique referral code for this user." },
+        "referredBy": { "type": "string", "description": "The referral code of the user who referred this user." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the user was created." }
+      },
+      "required": ["uid", "displayName", "email", "balance", "referralCode", "createdAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Defines a task that a user can complete to earn rewards.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the task." },
+        "title": { "type": "string", "description": "The title of the task." },
+        "reward": { "type": "number", "description": "The reward amount in INR." },
+        "description": { "type": "string", "description": "A brief description of the task." }
+      },
+      "required": ["id", "title", "reward"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Stores a withdrawal request from a user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the withdrawal request." },
+        "uid": { "type": "string", "description": "The ID of the user requesting the withdrawal." },
+        "amount": { "type": "number", "description": "The amount requested to be withdrawn." },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "The status of the withdrawal request." },
+        "paymentMethod": { "type": "string", "description": "The payment method (e.g., UPI, Bank Transfer)." },
+        "paymentDetails": { "type": "string", "description": "The details for the payment method (e.g., UPI ID)." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the request was made." }
+      },
+      "required": ["id", "uid", "amount", "status", "paymentMethod", "paymentDetails", "createdAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Stores a history of earnings and withdrawals for a user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the transaction." },
+        "uid": { "type": "string", "description": "The ID of the user." },
+        "amount": { "type": "number", "description": "The transaction amount (positive for earnings, negative for withdrawals)." },
+        "type": { "type": "string", "enum": ["task", "referral", "withdrawal"], "description": "The type of transaction." },
+        "description": { "type": "string", "description": "A brief description of the transaction." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The timestamp when the transaction occurred." }
+      },
+      "required": ["id", "uid", "amount", "type", "description", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles."
+    },
+    "tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Collection of available tasks."
+    },
+    "withdrawals/{withdrawalId}": {
+      "schema": "Withdrawal",
+      "description": "Collection of withdrawal requests."
+    },
+    "transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Collection of user transactions."
+    }
+  }
+}
